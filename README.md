@@ -232,5 +232,5 @@ For SIDD, the paper additionally reports MANIQA **0.2951**, CLIPIQA **0.2955**, 
 
 ## Acknowledgements and license
 
-This implementation builds on [KAIR](https://github.com/cszn/KAIR), [SCUNet](https://github.com/cszn/SCUNet), and [guided-diffusion].
+This implementation builds on [KAIR](https://github.com/cszn/KAIR), [SCUNet](https://github.com/cszn/SCUNet), [DMID](https://github.com/Li-Tong-621/DMID) and [guided-diffusion].
 
