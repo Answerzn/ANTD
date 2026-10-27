@@ -1,7 +1,6 @@
 <div align="center">
 
-# ANTD
-### Adapting Pre-trained Diffusion Model for Blind Image Denoising<br>via Noise Compensation and Timestep Prediction
+# Adapting Pre-trained Diffusion Model for Blind Image Denoising<br>via Noise Compensation and Timestep Prediction
 
 **ICIP 2026**
 
