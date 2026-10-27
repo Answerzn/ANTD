@@ -1,0 +1,2 @@
+# Optional: only needed for test_avg_iqa.py. Install after requirements.txt.
+pyiqa==0.1.13

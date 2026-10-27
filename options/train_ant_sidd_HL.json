@@ -1,0 +1,76 @@
+{
+  // UTF-8 JSON with // comments, parsed by utils/utils_option.py.
+  // EDIT FIRST: task, gpu_ids, dataset paths and the diffusion checkpoint path.
+  "task": "antd_sidd",
+  "model": "antd",
+  "gpu_ids": [0],                 // EDIT: physical GPU IDs. Paper setup: [0, 1].
+  "scale": 1,                    // Fixed for denoising.
+  "n_channels": 3,               // Fixed: provided weights expect RGB.
+
+  "path": {
+    "root": "experiments",       // Outputs: root/task/{models,images,options}.
+    "pretrained_netG": null,     // Optional ANT .pth for fine-tuning; keep netG identical.
+    "pretrained_optimizerG": null // Leave null for a new run.
+  },
+
+  "datasets": {
+    "train": {
+      "name": "SIDD-Medium",
+      "dataset_type": "antd_sidd",
+      "dataroot_H": "datasets/SIDD_Medium_Srgb/Patch/gt", // EDIT: clean RGB images (recursive).
+      "dataroot_L": "datasets/SIDD_Medium_Srgb/Patch/noise", // EDIT: aligned noisy RGB images. See docs/USAGE_zh-CN.md.
+      "dataloader_shuffle": true,
+      "dataloader_num_workers": 0, // Portable default. Linux: try 4-8 total workers.
+      "dataloader_batch_size": 2, // Global batch. Single-GPU starter; paper uses 4 on 2 GPUs.
+      "lq_patchsize": 256         // Paper crop. Use multiples of 64; affects memory/results.
+    },
+    "test": {
+      "name": "SIDD-validation",
+      "dataset_type": "antd_sidd",
+      "dataroot_H": "testsets/sidd_validation/gt",
+      "dataroot_L": "testsets/sidd_validation/noisy",
+      "lq_patchsize": 256         // Training crop option; validation uses full images.
+    }
+  },
+
+  "netG": {
+    // CHECKPOINT CONTRACT: change only when training a new architecture.
+    // Legacy registry identifier retained for compatibility with existing weights.
+    "net_type": "noise_t_predictor",
+    "in_nc": 3,
+    "nc_config": [2, 2, 2, 2, 2, 2, 2],
+    "t_config": [2, 2, 2, 1],
+    "dim": 32,
+    "drop_path_rate": 0.0,
+    "input_resolution": 128,     // Architecture hint, NOT the training crop size.
+    "init_type": "orthogonal",
+    "init_bn_type": "uniform",
+    "init_gain": 0.2
+  },
+
+  "pre_trained": {
+    // REQUIRED: frozen ImageNet 256x256 unconditional diffusion backbone.
+    "pre_trained_diff_path": "model_zoo/256x256_diffusion_uncond.pt"
+  },
+
+  "train": {
+    "manual_seed": 0,            // Seed Python/NumPy/PyTorch. Not bitwise resume.
+    "total_iter": 600000,        // Release default; paper does not specify total iterations.
+    "auto_resume": true,         // Latest G + matching optimizer in root/task/models.
+    "G_optimizer_reuse": true,   // Save/load Adam state for continued training.
+    "G_param_strict": true,      // Keep true for released checkpoints.
+    "G_lossfn_type": "l2",       // Reconstruction MSE.
+    "G_lossfn_weight": 1.0,
+    "t_lossfn_type": "l2",       // Normalized timestep MSE.
+    "t_lossfn_weight": 1.0,      // Paper lambda = 1.
+    "G_optimizer_type": "adam",
+    "G_optimizer_lr": 1e-4,      // Repository training setting.
+    "G_scheduler_type": "MultiStepLR",
+    "G_scheduler_milestones": [100000, 200000, 300000, 400000, 500000],
+    "G_scheduler_gamma": 0.5,
+    "validation_border": 0,     // RGB PSNR; no border shaving, same as test scripts.
+    "checkpoint_test": 20000,   // Iteration intervals, not epochs; must be > 0.
+    "checkpoint_save": 20000,
+    "checkpoint_print": 200
+  }
+}
