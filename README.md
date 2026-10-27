@@ -1,6 +1,6 @@
 <div align="center">
 
-## Adapting Pre-trained Diffusion Model for Blind Image Denoising<br>via Noise Compensation and Timestep Prediction
+## [Adapting Pre-trained Diffusion Model for Blind Image Denoising<br>via Noise Compensation and Timestep Prediction](https://ieeexplore.ieee.org/abstract/document/11630269)
 
 **ICIP 2026**
 
